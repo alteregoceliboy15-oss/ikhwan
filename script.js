@@ -1,25 +1,30 @@
-// Ambil semua gambar
-const images = document.querySelectorAll('.image-container img');
-const lightbox = document.getElementById('lightbox');
-const lightboxImg = document.getElementById('lightbox-img');
-const closeBtn = document.querySelector('.close');
+// Load stock dari localStorage
+let stock = JSON.parse(localStorage.getItem("stockData")) || {
+    sock: 0,
+    handsock: 0
+};
 
-// Klik gambar untuk buka lightbox
-images.forEach(img => {
-    img.addEventListener('click', () => {
-        lightbox.style.display = 'block';
-        lightboxImg.src = img.src;
-    });
-});
+function updateUI() {
+    document.getElementById("sock-stock").innerText = stock.sock;
+    document.getElementById("handsock-stock").innerText = stock.handsock;
+}
 
-// Klik X untuk tutup
-closeBtn.addEventListener('click', () => {
-    lightbox.style.display = 'none';
-});
+function saveStock() {
+    localStorage.setItem("stockData", JSON.stringify(stock));
+}
 
-// Klik luar gambar untuk tutup
-lightbox.addEventListener('click', (e) => {
-    if(e.target === lightbox){
-        lightbox.style.display = 'none';
+function addStock(item) {
+    stock[item]++;
+    saveStock();
+    updateUI();
+}
+
+function removeStock(item) {
+    if (stock[item] > 0) {
+        stock[item]--;
+        saveStock();
+        updateUI();
     }
-});
+}
+
+updateUI();
